@@ -49,6 +49,8 @@ class SVM():
         """
 
         # 请补全此处代码
+#         print(x.shape)
+        return np.ones(shape=x.shape[0])
 
 
 if __name__ == '__main__':
