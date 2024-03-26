@@ -15,15 +15,16 @@ def process_poems1(file_name):
     """
 
     :param file_name:
-    :return: poems_vector  have tow dimmention ,first is the poem, the second is the word_index
+    :return: poems_vector  have two dimmention ,first is the poem, the second is the word_index
     e.g. [[1,2,3,4,5,6,7,8,9,10],[9,6,3,8,5,2,7,4,1]]
 
     """
     poems = []
-    with open(file_name, "r", encoding='utf-8', ) as f:
+    with open(file_name, "r", encoding='utf-8') as f:
         for line in f.readlines():
             try:
-                title, content = line.strip().split(':')
+                tokens = line.strip().split(':')
+                title, content = tokens
                 # content = content.replace(' ', '').replace('，','').replace('。','')
                 content = content.replace(' ', '')
                 if '_' in content or '(' in content or '（' in content or '《' in content or '[' in content or \
@@ -34,7 +35,7 @@ def process_poems1(file_name):
                 content = start_token + content + end_token
                 poems.append(content)
             except ValueError as e:
-                print("error")
+                print("error: ", e)
                 pass
     # 按诗的字数排序
     poems = sorted(poems, key=lambda line: len(line))
@@ -137,6 +138,7 @@ def run_training():
     loss_fun = torch.nn.NLLLoss()
     # rnn_model.load_state_dict(torch.load('./poem_generator_rnn'))  # if you have already trained your model you can load it by this line.
 
+    stop = False
     for epoch in range(30):
         batches_inputs, batches_outputs = generate_batch(BATCH_SIZE, poems_vector, word_to_int)
         n_chunk = len(batches_inputs)
@@ -149,7 +151,7 @@ def run_training():
                 x = np.array(batch_x[index], dtype = np.int64)
                 y = np.array(batch_y[index], dtype = np.int64)
                 x = Variable(torch.from_numpy(np.expand_dims(x,axis=1)))
-                y = Variable(torch.from_numpy(y ))
+                y = Variable(torch.from_numpy(y))
                 pre = rnn_model(x)
                 loss += loss_fun(pre , y)
                 if index == 0:
@@ -164,9 +166,8 @@ def run_training():
             torch.nn.utils.clip_grad_norm(rnn_model.parameters(), 1)
             optimizer.step()
 
-            if batch % 20 ==0:
-                torch.save(rnn_model.state_dict(), './poem_generator_rnn')
-                print("finish  save model")
+            torch.save(rnn_model.state_dict(), './poem_generator_rnn')
+            print("finish save model")
 
 
 
@@ -218,7 +219,7 @@ def gen_poem(begin_word):
 
 
 
-run_training()  # 如果不是训练阶段 ，请注销这一行 。 网络训练时间很长。
+# run_training()  # 如果不是训练阶段 ，请注销这一行 。 网络训练时间很长。
 
 
 pretty_print_poem(gen_poem("日"))
@@ -226,8 +227,8 @@ pretty_print_poem(gen_poem("红"))
 pretty_print_poem(gen_poem("山"))
 pretty_print_poem(gen_poem("夜"))
 pretty_print_poem(gen_poem("湖"))
-pretty_print_poem(gen_poem("湖"))
-pretty_print_poem(gen_poem("湖"))
+pretty_print_poem(gen_poem("海"))
+pretty_print_poem(gen_poem("月"))
 pretty_print_poem(gen_poem("君"))
 
 
