@@ -122,8 +122,8 @@ def generate_batch(batch_size, poems_vec, word_to_int):
 
 def run_training():
     # 处理数据集
-    # poems_vector, word_to_int, vocabularies = process_poems2('./tangshi.txt')
-    poems_vector, word_to_int, vocabularies = process_poems1('./poems.txt')
+    # poems_vector, word_to_int, vocabularies = process_poems2('../tangshi.txt')
+    poems_vector, word_to_int, vocabularies = process_poems1('../poems.txt')
     # 生成batch
     print("finish  loadding data")
     BATCH_SIZE = 100
@@ -194,7 +194,7 @@ def pretty_print_poem(poem):  # 令打印的结果更工整
 
 def gen_poem(begin_word):
     # poems_vector, word_int_map, vocabularies = process_poems2('./tangshi.txt')  #  use the other dataset to train the network
-    poems_vector, word_int_map, vocabularies = process_poems1('./poems.txt')
+    poems_vector, word_int_map, vocabularies = process_poems1('../poems.txt')
     word_embedding = rnn_lstm.word_embedding(vocab_length=len(word_int_map) + 1, embedding_dim=100)
     rnn_model = rnn_lstm.RNN_model(batch_sz=64, vocab_len=len(word_int_map) + 1, word_embedding=word_embedding,
                                    embedding_dim=100, lstm_hidden_dim=128)
